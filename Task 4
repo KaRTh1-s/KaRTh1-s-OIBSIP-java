@@ -1,0 +1,159 @@
+/* The project should be capable of the following functionalities.
+
+Login
+Update Profile and Password
+Selecting answers for MCQs
+Timer and auto submit
+Closing session and Logout */
+
+
+package numberGame;
+import java.util.*;
+
+public class OnlineExaminationSystem {
+
+    // Predefined user credentials and profile info
+    private static HashMap<String, String> users = new HashMap<>();
+    private static HashMap<String, String> profiles = new HashMap<>();
+    private static String loggedInUser = null;
+
+    static {
+        users.put("user1", "password1");
+        profiles.put("user1", "User One");
+        
+        users.put("user2", "password2");
+        profiles.put("user2", "User Two");
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Login
+        if (login(scanner)) {
+            while (true) {
+                System.out.println("\nWelcome, " + profiles.get(loggedInUser));
+                System.out.println("1. Update Profile");
+                System.out.println("2. Start Exam");
+                System.out.println("3. Logout");
+                System.out.print("Enter your choice: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Clear the buffer
+
+                switch (choice) {
+                    case 1:
+                        updateProfile(scanner);
+                        break;
+                    case 2:
+                        startExam(scanner);
+                        break;
+                    case 3:
+                        logout();
+                        scanner.close();
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+            }
+        } else {
+            System.out.println("Login failed. Exiting.");
+        }
+    }
+
+    // Login method
+    public static boolean login(Scanner scanner) {
+        System.out.println("Login to Online Examination System");
+
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
+
+        if (users.containsKey(username) && users.get(username).equals(password)) {
+        	
+            loggedInUser = username;
+            System.out.println("Login successful!");
+            return true;
+        } else {
+            System.out.println("Invalid credentials.");
+            return false;
+        }
+    }
+
+    // Update profile and password
+    public static void updateProfile(Scanner scanner) {
+        System.out.println("\nUpdate Profile");
+        System.out.print("Enter new name: ");
+        String newName = scanner.nextLine();
+        
+        profiles.put(loggedInUser, newName);
+
+        System.out.print("Do you want to update your password? (yes/no): ");
+        if (scanner.nextLine().equalsIgnoreCase("yes")) {
+            System.out.print("Enter new password: ");
+            String newPassword = scanner.nextLine();
+                 users.put(loggedInUser, newPassword);
+                 System.out.println("Password updated successfully.");
+        }
+
+        System.out.println("Profile updated successfully.");
+    }
+
+    // Start the exam
+    public static void startExam(Scanner scanner) {
+        System.out.println("\nStarting Exam...");
+        int totalQuestions = 3;
+        int correctAnswers = 0;
+
+        String[] questions = {
+            "1. What is the capital of France?\nA. Berlin\nB. Paris\nC. Madrid\nD. Rome",
+            "2. Which planet is known as the Red Planet?\nA. Earth\nB. Mars\nC. Venus\nD. Jupiter",
+            "3. What is the largest ocean on Earth?\nA. Indian\nB. Pacific\nC. Atlantic\nD. Arctic"
+        };
+
+        String[] answers = {"B", "B", "B"};
+
+        // Exam timer set to 60 seconds
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("\nTime's up! Auto-submitting the exam...");
+                timer.cancel();
+                showResult(correctAnswers, totalQuestions);
+                logout();
+                System.exit(0);
+            }
+        }, 60000); // 60 seconds
+
+        for (int i = 0; i < totalQuestions; i++) {
+            System.out.println(questions[i]);
+            System.out.print("Enter your answer (A/B/C/D): ");
+            String answer = scanner.nextLine().toUpperCase();
+
+            if (answer.equals(answers[i])) {
+                correctAnswers++;
+            }
+
+            if (i == totalQuestions - 1) {
+                timer.cancel(); // Stop timer after last question
+            }
+        }
+
+        // Show result and logout
+        showResult(correctAnswers, totalQuestions);
+        logout();
+    }
+
+    // Display exam result
+    public static void showResult(int correctAnswers, int totalQuestions) {
+        System.out.println("\nExam finished!");
+        System.out.println("You answered " + correctAnswers + " out of " + totalQuestions + " correctly.");
+        System.out.println("Your score: " + (correctAnswers * 100 / totalQuestions) + "%");
+    }
+
+    // Logout
+    public static void logout() {
+        System.out.println("Logging out...");
+        loggedInUser = null;
+    }
+}
