@@ -1,0 +1,111 @@
+/* This Online Reservation System will include all the necessary fields which are required during
+online reservation system. This Online Reservation System will be easy to use and can be used by
+any person. The basic idea behind this project is to save data in a central database which can be
+accessed by any authorize person to get information and saves time and burden which are being
+faced by their customers. */
+
+
+package numberGame;
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class OnlineReservationSystem {
+
+    // Predefined user credentials for login
+    private static HashMap<String, String> users = new HashMap<>();
+
+    static {
+        users.put("user1", "password1");
+        users.put("user2", "password2");
+    }
+
+    // Login system method
+    public static boolean login(String username, String password) {
+        return users.containsKey(username) && users.get(username).equals(password);
+    }
+
+    // Main method to start the system
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Login process
+        System.out.println("Welcome to the Online Reservation System");
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
+
+        if (login(username, password)) {
+            System.out.println("Login successful. Accessing Reservation System...");
+            reservationSystem(scanner);
+        } else {
+            System.out.println("Invalid credentials.");
+        }
+
+        scanner.close();
+    }
+
+    // Reservation system method
+    public static void reservationSystem(Scanner scanner) {
+        System.out.println("\nReservation System");
+
+        System.out.print("Enter Train Number: ");
+        String trainNumber = scanner.nextLine();
+
+        System.out.print("Enter Train Name: ");
+        String trainName = scanner.nextLine();
+
+        System.out.print("Enter Class Type (e.g., Sleeper, AC): ");
+        String classType = scanner.nextLine();
+
+        System.out.print("Enter Date of Journey (DD/MM/YYYY): ");
+        String dateOfJourney = scanner.nextLine();
+
+        System.out.print("Enter From Station: ");
+        String fromStation = scanner.nextLine();
+
+        System.out.print("Enter Destination: ");
+        String destination = scanner.nextLine();
+
+        System.out.println("\nReservation Successful! Details:");
+        System.out.println("Train No: " + trainNumber);
+        System.out.println("Train Name: " + trainName);
+        System.out.println("Class: " + classType);
+        System.out.println("Date of Journey: " + dateOfJourney);
+        System.out.println("From: " + fromStation);
+        System.out.println("To: " + destination);
+        System.out.println("Status: Confirmed");
+
+
+        System.out.println("\nDo you want to cancel a ticket? (yes/no)");
+        if (scanner.nextLine().equalsIgnoreCase("yes")) {
+            cancellationForm(scanner);
+        } else {
+            System.out.println("Thank you for using the Reservation System.");
+        }
+    }
+
+    // Cancellation form method
+    public static void cancellationForm(Scanner scanner) {
+        System.out.println("\nCancellation Form");
+
+        System.out.print("Enter PNR Number: ");
+        String pnrNumber = scanner.nextLine();
+
+        // Mock validation of PNR number and details
+        System.out.println("Fetching details for PNR: " + pnrNumber);
+        System.out.println("Train No: 12345");
+        System.out.println("Train Name:Express");
+        System.out.println("Date of Journey: 25/10/2024");
+        System.out.println("From: City Chennai");
+        System.out.println("To: City Madurai");
+        System.out.println("Status: Confirmed");
+
+        System.out.println("Do you want to cancel this ticket? (yes/no)");
+        if (scanner.nextLine().equalsIgnoreCase("yes")) {
+            System.out.println("Ticket successfully canceled.");
+        } else {
+            System.out.println("Cancellation aborted.");
+        }
+    }
+}
